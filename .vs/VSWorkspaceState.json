@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\public",
+    "\\src",
+    "\\src\\actions",
+    "\\src\\component",
+    "\\src\\component\\dashboard",
+    "\\src\\component\\dashboard\\customer",
+    "\\src\\component\\dashboard\\suppliers",
+    "\\src\\component\\dashboard\\uom",
+    "\\src\\component\\notfound"
+  ],
+  "SelectedNode": "\\src\\App.js",
+  "PreviewInSolutionExplorer": false
+}

@@ -1,0 +1,133 @@
+@import "../../scss/_variables";
+@import '~simple-line-icons/css/simple-line-icons.css';
+
+.wrapper_dashboard {
+    background-color: $dash_bg;
+    height: 100vh;
+    position: relative;
+}
+.header-fixed .app-header{
+    z-index:99 !important;
+}
+.d_br {
+    width: 200px;
+}
+.d_br img{
+    width:125px;
+}
+.app-header .nav-item{
+    margin-right:10px;
+}
+.app-header .dropdown-item{
+    min-width:160px !important;
+}
+.app-header .navbar-nav .dropdown-menu-right{
+    top:0px !important;
+}
+.app-header .navbar-nav .dropdown-menu-right::before{
+    border-left:10px solid transparent;
+    border-right:10px solid transparent;
+    border-bottom:10px solid #ff0000;
+}
+.sidebar-fixed .sidebar {
+    margin-top: 55px;
+}
+.sidebar .nav-dropdown.open > .nav-dropdown-items {
+    background-color: #666666;
+}
+.sidebar-lg-show .dh_main {
+    background-color: $dash_bg_gray;
+    height: 100vh;
+    margin-left: 200px;
+    padding-top: 55px;
+    -webkit-transition: margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s;
+    transition: margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s;
+}
+.dh_main {
+    background-color: $dash_bg_gray;
+    height: 100vh;
+    margin-left: 0px;
+    padding-top: 55px;
+    -webkit-transition: margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s;
+    transition: margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s;
+}
+.dash_inner {        
+    padding-top:15px;
+}
+.dh-m {
+    position: relative;
+    margin-bottom: 20px !important;
+}
+.form-group label{
+    font-weight:bold;
+}
+.modal-header {
+    border-bottom: 1px solid #e4e7ea !important;
+}
+.modal-footer {
+    border-top: 1px solid #e4e7ea !important;
+}
+.card-header {
+    font-size: 20px;
+    font-weight: bold;
+    color: #0073aa;
+    text-transform: uppercase;
+}
+/*Dashboard Buttons*/
+.disabled{
+    pointer-events:none;
+    opacity:0.3;
+}
+.dh_btn_action {
+    border-radius: 50px;
+    padding: 5px 15px;
+    font-size: 10px;
+    border: 0;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+    text-transform: uppercase;
+    margin-right: 5px;
+}
+.btn_add {
+    background-color: $dh_info;
+    color: $txt_white;
+}
+.btn_remove {
+    background-color: $dh_error;
+    color: $txt_white;
+}
+.btn_edit {
+    background-color: $dh_success;
+    color: $txt_white;
+}
+.dh_btn_normal {
+    border-radius: 50px;
+    padding: 12px 20px;
+    font-size: 14px;
+    border: 0;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+    text-transform: uppercase;
+}
+.btn_submit {
+    background-color: $dash_dark_blue;
+    color:$txt_white;
+}
+.btn_submit:hover {
+    opacity:0.8;
+}
+/*Dashboard Buttons*/
+.ReactTable .rt-thead.-headerGroups{
+    display:none;
+}
+.ReactTable .rt-thead .rt-resizable-header {
+    padding: 15px 5px;
+    font-weight: bold;
+    text-align: left;
+    color: $dash_dark_blue;
+}
+.ReactTable .rt-thead.-header {
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.05);
+}
+.ReactTable .rt-thead .rt-th.-sort-asc, .ReactTable .rt-thead .rt-td.-sort-asc {
+    box-shadow: inset 0 3px 0 0 rgba(0,115,170,0.8);
+}
+
