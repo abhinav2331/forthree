@@ -183,5 +183,38 @@ export function validateAddSupplies(valueSupply) {
     return errorSupply;
 };
 
+export function validateAddCustomer(valueCustomerAdd) {
+    let errors = {};   
+
+    if (!valueCustomerAdd.FirstName) {
+        errors.FirstName = 'FirstName is required';
+    }
+    if (!valueCustomerAdd.LastName) {
+        errors.LastName = 'LastName is required';
+    }
+    if (!valueCustomerAdd.PhoneNumber) {
+        errors.PhoneNumber = 'PhoneNumber is required';
+    }
+    if (!valueCustomerAdd.MobileNumber) {
+        errors.MobileNumber = 'MobileNumber is required';
+    }
+    if (!valueCustomerAdd.Address1) {
+        errors.Address1 = 'Address1 is required';
+    }
+    if (!valueCustomerAdd.Address2) {
+        errors.Address2 = 'Address2 is required';
+    }
+    if (!valueCustomerAdd.City) {
+        errors.City = 'City is required';
+    }
+    if (!valueCustomerAdd.State) {
+        errors.State = 'State is required';
+    }
+    if (!valueCustomerAdd.PostalCode) {
+        errors.PostalCode = 'PostalCode is required';
+    }
+
+    return errors;
+};
 
 

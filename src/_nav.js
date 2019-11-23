@@ -7,7 +7,12 @@ export default {
         },
         {
             name: 'Customers',
-            url: '/',
+            url: '/dashboard/customer',
+            icon: 'icon-drop',
+        },
+        {
+            name: 'Inventory',
+            url: '/dashboard/inventory',
             icon: 'icon-drop',
         },
         {

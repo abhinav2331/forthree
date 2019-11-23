@@ -25,7 +25,7 @@ const loading = () => <div className="loader_wrap">
 
 
 export default function Suppliers() {
-    //debugger;
+    debugger;
     const SupplierSelector = useSelector((state) => state.SupplierReducer);
     const dispatch = useDispatch();
     const getAllSuppliers = () => dispatch(getSuppliers());

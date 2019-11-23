@@ -58,7 +58,7 @@ export const useFormLogin = (callback, validateLogin) => {
         event.persist();
         setValues(values => ({ ...values, [event.target.name]: event.target.value }));
         setIsSubmitting(false);
-        setErrors(validateLogin(values));
+        //setErrors(validateLogin(values));
     };
 
     return {
@@ -414,5 +414,77 @@ export const useFormEditSupplies = (callback, validateAddSupplies) => {
         valueSupplyEdit,
         errorsedit,
         setValueSupplyEdit
+    }
+};
+
+//12.For Add Customer
+export const useFormAddCustomer = (callback, validateAddCustomer) => {
+
+    const [valueCustomerAdd, setValueCustomerAdd] = useState({});
+    const [errors, setErrors] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        if (Object.keys(errors).length === 0 && isSubmitting) {
+            callback();
+        }
+        //clear();
+    }, [errors]);
+
+    const handleSubmitCustomer = (event) => {
+        if (event) event.preventDefault();
+        setErrors(validateAddCustomer(valueCustomerAdd));
+        setIsSubmitting(true);
+        //clear();
+    };
+
+    const handleChangeCustomers = (event) => {
+        event.persist();
+        setValueCustomerAdd(valueCustomerAdd => ({ ...valueCustomerAdd, [event.target.name]: event.target.value }));
+        //setErrorsedit(validateAddSupplies(valuesEdit));
+    };
+
+    return {
+        handleSubmitCustomer,
+        handleChangeCustomers,
+        valueCustomerAdd,
+        errors,
+        setValueCustomerAdd
+    }
+};
+
+//13.For Edit Customer
+export const useFormEditCustomer = (callback, validateAddCustomer) => {
+
+    const [valueCustomerEdit, setValueCustomerEdit] = useState({});
+    const [errorsCustomerEdit, setErrorsCustomerEdit] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        if (Object.keys(errorsCustomerEdit).length === 0 && isSubmitting) {
+            callback();
+        }
+        //clear();
+    }, [errorsCustomerEdit]);
+
+    const handleEditCustomer = (event) => {
+        if (event) event.preventDefault();
+        setErrorsCustomerEdit(validateAddCustomer(valueCustomerEdit));
+        setIsSubmitting(true);
+        //clear();
+    };
+
+    const handleChangeEditCustomers = (event) => {
+        event.persist();
+        setValueCustomerEdit(valueCustomerEdit => ({ ...valueCustomerEdit, [event.target.name]: event.target.value }));
+        //setErrorsedit(validateAddSupplies(valuesEdit));
+    };
+
+    return {
+        handleEditCustomer,
+        handleChangeEditCustomers,
+        valueCustomerEdit,
+        errorsCustomerEdit,
+        setValueCustomerEdit
     }
 };

@@ -1,16 +1,17 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getUom } from "../../../actions/uom.action";
+import { getCustomers } from "../../../actions/customers.action";
 import ReactTable from 'react-table';
 import { useAlert } from "react-alert";
 
+var userId = sessionStorage.currentUserId;
+
 import Appmodal from "../../modal/modal.component";
 import Inputfield from "../../common/input.component";
-import { useFormAdduom, useFormEdit } from "../../common/useForm";
-import { validateAdduom, validateEdituom } from "../../common/form.validation";
+import { useFormAddCustomer, useFormEditCustomer } from "../../common/useForm";
+import { validateAddCustomer } from "../../common/form.validation";
 import { forPost, forPut, forDelete } from "../../common/api.call";
-
 
 const loading = () => <div className="loader_wrap">
     <div>
@@ -22,19 +23,18 @@ const loading = () => <div className="loader_wrap">
     </div>
 </div>;
 
-
 export default function Customers() {
     //debugger;
-    const UomSelector = useSelector((state) => state.UomReducer);
+    const CustomerSelector = useSelector((state) => state.CustomerReducer);
     const dispatch = useDispatch();
-    const getAllUom = () => dispatch(getUom());
-    //const { values, handleChange, handleSubmit, errors } = useFormAdduom(createuom, validateAdduom);
-    //const { valuesedit, handleeditChange, handleeditSubmit, errorsedit, setValuesedit } = useFormEdit(edituom, validateEdituom);
+    const getAllCustomer = () => dispatch(getCustomers());
+    const { valueCustomerAdd, handleSubmitCustomer, handleChangeCustomers, errors } = useFormAddCustomer(createCustomer, validateAddCustomer);
+    const { valueCustomerEdit, handleChangeEditCustomers, handleEditCustomer, errorsCustomerEdit, setValueCustomerEdit } = useFormEditCustomer(editCustomer, validateAddCustomer);
     const alert = useAlert();
 
     //For modal
-    //const [modal, setModal] = useState(false);
-    //const [editmodal, setEditmodal] = useState(false);
+    const [modal, setModal] = useState(false);
+    const [editmodal, setEditmodal] = useState(false);
     //For edit and delete row
     const [selectionChanged, setSelectionChanged] = useState(false);
     const [rowHighSelect, setRowHighSelect] = useState([]);
@@ -42,7 +42,7 @@ export default function Customers() {
     const [editableRows, setEditableRows] = useState({});
     const [selectedRowIndex, setSelectedRowIndex] = useState([]);
 
-    {/*const showModal = (event) => {
+    const showModal = (event) => {
         debugger;
         event.preventDefault();
         setModal(true);
@@ -51,42 +51,48 @@ export default function Customers() {
         event.preventDefault();
         setModal(false);
     };
-
-    const showEditModal = () => {
-        debugger;
-        setEditmodal(true);
-    };
     const hideEditModal = () => {
         setEditmodal(false);
-    };*/}
-
-    {/*const handleDelete = () => {
+    };
+    //handle delete
+    const handleDelete = () => {
         debugger;
-        let rowid = selectedRowIndex.Id;
-        console.log(rowid.Id);
-        //console.log(row.Id);
-        //setModal(true);
-        forDelete(`uom/delete/${rowid}`)
+        let rowid = selectedRowIndex.ID;
+        console.log(rowid.id);
+        forDelete(`customers/delete/${rowid}`)
             .then(response => {
                 console.log(response.data);
                 alert.success(response.data.message);
                 setRowEdit("");
-                getAllUom();
+                getAllCustomer();
             }).catch((error) => {
-                if (error.response) {
-                    console.log("--------");
-                    console.log(error.response);
-                    alert.error(error.response.statusText);
-                } else if (error.request) {
-                } else {
-                }
+                console.log("--------");
+                console.log(error.response);
+                alert.error(error.response.statusText);
             });
-    };*/}
+    };
 
-
-    /*function createuom() {
+    //Add Customer
+    function createCustomer() {
         debugger;
-        forPost(`uom/add`, { uomCode: values.uomCode, uomDescription: values.uomDescription, lastUpdatedBy: "", BpartnerId: 14 })
+        forPost(`customers/add`, { 
+            CountryId:1,
+            PartnerId: userId,
+            UserName: "qqq",
+            Password: "www",
+            FirstName: valueCustomerAdd.FirstName,
+            LastName: valueCustomerAdd.LastName,
+            PhoneNumber: valueCustomerAdd.PhoneNumber,
+            MobileNumber: valueCustomerAdd.MobileNumber,
+            Address1: valueCustomerAdd.Address1,
+            Address2: valueCustomerAdd.Address2,
+            City: valueCustomerAdd.City,
+            State: valueCustomerAdd.State,
+            PostalCode: valueCustomerAdd.PostalCode,
+            LastUpdatedBy: "1",
+            IsActive: "1",
+            IsVerified: "1"
+        })
             .then(response => {
                 //setMessage("");
                 console.log(response.data);
@@ -94,7 +100,7 @@ export default function Customers() {
                 //setMessage(response.data);
                 setModal(false);
                 alert.success(response.data.message);
-                getAllUom();
+                getAllCustomer();
             }).catch((error) => {
                 // Error
                 if (error.response) {
@@ -112,16 +118,36 @@ export default function Customers() {
                 // console.log(error.status);
             });
 
-    };*/
-    /*For UOM Edit*/
-    /*const handleUomEdit = () => {
+    };
+    //Edit Customers
+    const handleCustomerEdit = () => {
         debugger;
         setEditmodal(true);
-        setValuesedit(selectedRowIndex);
+        console.log("****");
+        console.log(selectedRowIndex);
+        setValueCustomerEdit(selectedRowIndex);
     };
-    function edituom() {
+
+    function editCustomer() {
         debugger;
-        forPut(`uom/edit/${valuesedit.Id}`, { uomCode: valuesedit.uomCode, uomDescription: valuesedit.uomDescription, lastUpdatedBy: "", isActive: 1, BpartnerId: 14 })
+        forPut(`customers/edit/${valueCustomerEdit.ID}`, {
+            CountryId: 1,
+            PartnerId: userId,
+            UserName: "",
+            Password: "",
+            FirstName: valueCustomerEdit.FirstName,
+            LastName: valueCustomerEdit.LastName,
+            PhoneNumber: valueCustomerEdit.PhoneNumber,
+            MobileNumber: valueCustomerEdit.MobileNumber,
+            Address1: valueCustomerEdit.Address1,
+            Address2: valueCustomerEdit.Address2,
+            City: valueCustomerEdit.City,
+            State: valueCustomerEdit.State,
+            PostalCode: valueCustomerEdit.PostalCode,
+            LastUpdatedBy: "1",
+            IsActive: "1",
+            IsVerified: "1"
+        })
             .then(response => {
                 //setMessage("");
                 console.log(response.data);
@@ -129,8 +155,7 @@ export default function Customers() {
                 //setMessage(response.data);
                 setEditmodal(false);
                 alert.success(response.data.message);
-                setRowEdit("");
-                getAllUom();
+                getAllSuppliers();
             }).catch((error) => {
                 // Error
                 if (error.response) {
@@ -147,11 +172,10 @@ export default function Customers() {
                 }
                 // console.log(error.status);
             });
-    };*/
+    };
 
     /*For Select row*/
-    function renderEditable(cellInfo) {
-        debugger;
+    function renderEditable(cellInfo) {       
         const editable = editableRows[cellInfo.index];
         return (
             <div
@@ -159,12 +183,12 @@ export default function Customers() {
                 contentEditable={editable}
                 suppressContentEditableWarning
                 onBlur={e => {
-                    const data = [UomSelector.Uoms];
+                    const data = [CustomerSelector.Customers];
                     data[cellInfo.index][cellInfo.column.id] = e.target.innerText;
                     //setBusinessDivision({ data });
                 }}
                 dangerouslySetInnerHTML={{
-                    __html: UomSelector.Uoms[cellInfo.index][cellInfo.column.id]
+                    __html: CustomerSelector.Customers[cellInfo.index][cellInfo.column.id]
                 }}
             />
         );
@@ -174,52 +198,76 @@ export default function Customers() {
         {
             columns: [
                 {
-                    Header: 'UOMDescription',
-                    accessor: 'uomDescription',
+                    Header: 'First Name',
+                    accessor: 'FirstName',
                     Cell: renderEditable
                 },
                 {
-                    Header: 'UOMCode',
-                    accessor: 'uomCode',
+                    Header: 'Last Name',
+                    accessor: 'LastName',
+                    Cell: renderEditable
+                },
+                {
+                    Header: 'Address 1',
+                    accessor: 'Address1',
+                    Cell: renderEditable
+                },
+                {
+                    Header: 'Address 2',
+                    accessor: 'Address2',
+                    Cell: renderEditable
+                },
+                {
+                    Header: 'City',
+                    accessor: 'City',
+                    Cell: renderEditable
+                },
+                {
+                    Header: 'MobileNumber',
+                    accessor: 'MobileNumber',
+                    Cell: renderEditable
+                },
+                {
+                    Header: 'PhoneNumber',
+                    accessor: 'PhoneNumber',
                     Cell: renderEditable
                 },
                 {
                     Header: 'CreateedOn',
-                    accessor: 'createedDate',
+                    accessor: 'CreateedOn',
                     Cell: renderEditable
                 },
                 {
-                    Header: 'BpartnerId',
-                    accessor: 'Id',
+                    Header: 'PartnerId',
+                    accessor: 'PartnerId',
                     Cell: renderEditable
                 }
-
             ]
         }
 
     ]
 
     useEffect(() => {
-        getAllUom();
+        getAllCustomer();
     }, []);
 
     return (
         <section>
             <div className="card">
                 <div className="card-header">
-                    UOM
+                    Customer
                     <button onClick={showModal} className="btn_add dh_btn_action pull-right">Add Uom</button>
                     {
                         rowEdit == "" ? <span><button onClick={() => { if (window.confirm('Are you sure you wish to delete this item?')) handleDelete }} className="dh_btn_action disabled btn_remove pull-right">Delete Attributes</button>
-                            <button onClick={handleUomEdit} className="dh_btn_action disabled btn_edit pull-right">Edit Attributes</button></span>
+                            <button onClick={handleCustomerEdit} className="dh_btn_action disabled btn_edit pull-right">Edit Attributes</button></span>
                             : <span><button onClick={() => { if (window.confirm('Are you sure you wish to delete this item?')) handleDelete() }} className="dh_btn_action btn_remove pull-right">Delete Attributes</button>
-                                <button onClick={handleUomEdit} className="dh_btn_action btn_edit pull-right">Edit Attributes</button></span>
+                                <button onClick={handleCustomerEdit} className="dh_btn_action btn_edit pull-right">Edit Attributes</button></span>
                     }
                 </div>
                 <div className="card-body">
                     <Suspense fallback={loading}>
                         <ReactTable
-                            data={UomSelector.Uoms}
+                            data={CustomerSelector.Customers}
                             columns={columnsNew}
                             defaultPageSize={10}
                             className="-striped -highlight"
@@ -227,7 +275,7 @@ export default function Customers() {
                                 if (rowInfo && rowInfo.row) {
                                     return {
                                         onClick: e => {
-                                            if (rowInfo.index != rowEdit) {
+                                            if (rowInfo.index !== rowEdit) {
                                                 setRowEdit(rowInfo.index);
                                                 setSelectedRowIndex(rowInfo.original);
                                                 setSelectionChanged(selectionChanged ? false : true);
@@ -235,9 +283,6 @@ export default function Customers() {
                                             } else {
                                                 setRowEdit("");
                                             }
-                                            //console.log(rowInfo.index);
-                                            //console.log(rowEdit);
-                                            //console.log(rowInfo.original);
                                         },
                                         style: {
                                             background:
@@ -255,93 +300,340 @@ export default function Customers() {
                 </div>
             </div>
 
-            {/*<Appmodal openModal={modal} closeModal={hideModal} modalHeader={"Add New UOM"} errors={errors} onSubmit={handleSubmit} btnContent={"Create UOM"}>
-                <div>
-                    <form onSubmit={handleSubmit} noValidate>
-                        <div className="row">
-                            <div className="col-lg-12 col-md-12 col-sm-12">
-                                <div className="form-group dh-m">
-                                    <label>UOMCode</label>
-                                    <Inputfield
-                                        className="form-control"
-                                        name="uomCode"
-                                        inputType="text"
-                                        content={values.uomCode}
-                                        controlFunc={handleChange}
-                                        placeholder="uomCode"
-                                    />
-                                    {errors.uomCode && (
-                                        <p className="help error_text">{errors.uomCode}</p>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-lg-12 col-md-12 col-sm-12">
-                                <div className="form-group dh-m">
-                                    <label>UOMDescription</label>
-                                    <Inputfield
-                                        className="form-control"
-                                        name="uomDescription"
-                                        inputType="text"
-                                        content={values.uomDescription}
-                                        controlFunc={handleChange}
-                                        placeholder="uomDescription"
-                                    />
-                                    {errors.uomDescription && (
-                                        <p className="help error_text">{errors.uomDescription}</p>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </Appmodal>*/}
-
-            {/*For Edit*/}
-            {/*<Appmodal openModal={editmodal} closeModal={hideEditModal} modalHeader={"Edit UOM"} errors={errorsedit} onSubmit={handleeditSubmit} btnContent={"Save UOM"}>
+            <Appmodal className={"modal-lg"} openModal={modal} closeModal={hideModal} modalHeader={"Add New Customer"} errors={errors} onSubmit={handleSubmitCustomer} btnContent={"Create Customer"}>
                 <div>
                     <form noValidate>
                         <div className="row">
-                            <div className="col-lg-12 col-md-12 col-sm-12">
+                            <div className="col-lg-6 col-md-6 col-sm-12">
                                 <div className="form-group dh-m">
-                                    <label>UOMCode</label>
+                                    <label>First Name</label>
                                     <Inputfield
                                         className="form-control"
-                                        name="uomCode"
+                                        name="FirstName"
                                         inputType="text"
-                                        content={valuesedit.uomCode || ''}
-                                        controlFunc={handleeditChange}
-                                        placeholder="uomCode"
+                                        content={valueCustomerAdd.FirstName || ''}
+                                        controlFunc={handleChangeCustomers}
+                                        placeholder="FirstName"
                                     />
-                                    {errorsedit.uomCode && (
-                                        <p className="help error_text">{errorsedit.uomCode}</p>
+                                    {errors.FirstName && (
+                                        <p className="help error_text">{errors.FirstName}</p>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="col-lg-6 col-md-6 col-sm-12">
+                                <div className="form-group dh-m">
+                                    <label>Last Name</label>
+                                    <Inputfield
+                                        className="form-control"
+                                        name="LastName"
+                                        inputType="text"
+                                        content={valueCustomerAdd.LastName || ''}
+                                        controlFunc={handleChangeCustomers}
+                                        placeholder="LastName"
+                                    />
+                                    {errors.LastName && (
+                                        <p className="help error_text">{errors.LastName}</p>
                                     )}
                                 </div>
                             </div>
                         </div>
+
                         <div className="row">
-                            <div className="col-lg-12 col-md-12 col-sm-12">
+                            <div className="col-lg-6 col-md-6 col-sm-12">
                                 <div className="form-group dh-m">
-                                    <label>UOMDescription</label>
+                                    <label>Phone Number</label>
                                     <Inputfield
                                         className="form-control"
-                                        name="uomDescription"
+                                        name="PhoneNumber"
                                         inputType="text"
-                                        content={valuesedit.uomDescription || ''}
-                                        controlFunc={handleeditChange}
-                                        placeholder="uomDescription"
+                                        content={valueCustomerAdd.PhoneNumber || ''}
+                                        controlFunc={handleChangeCustomers}
+                                        placeholder="PhoneNumber"
                                     />
-                                    {errorsedit.uomDescription && (
-                                        <p className="help error_text">{errorsedit.uomDescription}</p>
+                                    {errors.PhoneNumber && (
+                                        <p className="help error_text">{errors.PhoneNumber}</p>
                                     )}
                                 </div>
                             </div>
+                            <div className="col-lg-6 col-md-6 col-sm-12">
+                                <div className="form-group dh-m">
+                                    <label>Mobile Number</label>
+                                    <Inputfield
+                                        className="form-control"
+                                        name="MobileNumber"
+                                        inputType="text"
+                                        content={valueCustomerAdd.MobileNumber || ''}
+                                        controlFunc={handleChangeCustomers}
+                                        placeholder="MobileNumber"
+                                    />
+                                    {errors.MobileNumber && (
+                                        <p className="help error_text">{errors.MobileNumber}</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-lg-6 col-md-6 col-sm-12">
+                                <div className="form-group dh-m">
+                                    <label>Address1</label>
+                                    <Inputfield
+                                        className="form-control"
+                                        name="Address1"
+                                        inputType="text"
+                                        content={valueCustomerAdd.Address1 || ''}
+                                        controlFunc={handleChangeCustomers}
+                                        placeholder="Address1"
+                                    />
+                                    {errors.Address1 && (
+                                        <p className="help error_text">{errors.Address1}</p>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="col-lg-6 col-md-6 col-sm-12">
+                                <div className="form-group dh-m">
+                                    <label>Address2</label>
+                                    <Inputfield
+                                        className="form-control"
+                                        name="Address2"
+                                        inputType="text"
+                                        content={valueCustomerAdd.Address2 || ''}
+                                        controlFunc={handleChangeCustomers}
+                                        placeholder="Address2"
+                                    />
+                                    {errors.Address2 && (
+                                        <p className="help error_text">{errors.Address2}</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-lg-6 col-md-6 col-sm-12">
+                                <div className="form-group dh-m">
+                                    <label>City</label>
+                                    <Inputfield
+                                        className="form-control"
+                                        name="City"
+                                        inputType="text"
+                                        content={valueCustomerAdd.City || ''}
+                                        controlFunc={handleChangeCustomers}
+                                        placeholder="City"
+                                    />
+                                    {errors.City && (
+                                        <p className="help error_text">{errors.City}</p>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="col-lg-6 col-md-6 col-sm-12">
+                                <div className="form-group dh-m">
+                                    <label>State</label>
+                                    <Inputfield
+                                        className="form-control"
+                                        name="State"
+                                        inputType="text"
+                                        content={valueCustomerAdd.State || ''}
+                                        controlFunc={handleChangeCustomers}
+                                        placeholder="State"
+                                    />
+                                    {errors.State && (
+                                        <p className="help error_text">{errors.State}</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-lg-6 col-md-6 col-sm-12">
+                                <div className="form-group dh-m">
+                                    <label>Postal Code</label>
+                                    <Inputfield
+                                        className="form-control"
+                                        name="PostalCode"
+                                        inputType="text"
+                                        content={valueCustomerAdd.PostalCode || ''}
+                                        controlFunc={handleChangeCustomers}
+                                        placeholder="PostalCode"
+                                    />
+                                    {errors.PostalCode && (
+                                        <p className="help error_text">{errors.PostalCode}</p>
+                                    )}
+                                </div>
+                            </div>
+                            
                         </div>
                     </form>
                 </div>
-            </Appmodal>*/}
-            {/*For Edit*/}
+            </Appmodal>
+
+            {/*Edit Modal*/}
+            <Appmodal className={"modal-lg"} openModal={editmodal} closeModal={hideEditModal} modalHeader={"Edit Customer"} errors={errorsCustomerEdit} onSubmit={handleEditCustomer} btnContent={"Save Customer"}>
+                <div>
+                    <form noValidate>
+                        <div className="row">
+                            <div className="col-lg-6 col-md-6 col-sm-12">
+                                <div className="form-group dh-m">
+                                    <label>First Name</label>
+                                    <Inputfield
+                                        className="form-control"
+                                        name="FirstName"
+                                        inputType="text"
+                                        content={valueCustomerEdit.FirstName || ''}
+                                        controlFunc={handleChangeEditCustomers}
+                                        placeholder="FirstName"
+                                    />
+                                    {errors.FirstName && (
+                                        <p className="help error_text">{errors.FirstName}</p>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="col-lg-6 col-md-6 col-sm-12">
+                                <div className="form-group dh-m">
+                                    <label>Last Name</label>
+                                    <Inputfield
+                                        className="form-control"
+                                        name="LastName"
+                                        inputType="text"
+                                        content={valueCustomerEdit.LastName || ''}
+                                        controlFunc={handleChangeEditCustomers}
+                                        placeholder="LastName"
+                                    />
+                                    {errors.LastName && (
+                                        <p className="help error_text">{errors.LastName}</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-lg-6 col-md-6 col-sm-12">
+                                <div className="form-group dh-m">
+                                    <label>Phone Number</label>
+                                    <Inputfield
+                                        className="form-control"
+                                        name="PhoneNumber"
+                                        inputType="text"
+                                        content={valueCustomerEdit.PhoneNumber || ''}
+                                        controlFunc={handleChangeEditCustomers}
+                                        placeholder="PhoneNumber"
+                                    />
+                                    {errors.PhoneNumber && (
+                                        <p className="help error_text">{errors.PhoneNumber}</p>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="col-lg-6 col-md-6 col-sm-12">
+                                <div className="form-group dh-m">
+                                    <label>Mobile Number</label>
+                                    <Inputfield
+                                        className="form-control"
+                                        name="MobileNumber"
+                                        inputType="text"
+                                        content={valueCustomerEdit.MobileNumber || ''}
+                                        controlFunc={handleChangeEditCustomers}
+                                        placeholder="MobileNumber"
+                                    />
+                                    {errors.MobileNumber && (
+                                        <p className="help error_text">{errors.MobileNumber}</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-lg-6 col-md-6 col-sm-12">
+                                <div className="form-group dh-m">
+                                    <label>Address1</label>
+                                    <Inputfield
+                                        className="form-control"
+                                        name="Address1"
+                                        inputType="text"
+                                        content={valueCustomerEdit.Address1 || ''}
+                                        controlFunc={handleChangeEditCustomers}
+                                        placeholder="Address1"
+                                    />
+                                    {errors.Address1 && (
+                                        <p className="help error_text">{errors.Address1}</p>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="col-lg-6 col-md-6 col-sm-12">
+                                <div className="form-group dh-m">
+                                    <label>Address2</label>
+                                    <Inputfield
+                                        className="form-control"
+                                        name="Address2"
+                                        inputType="text"
+                                        content={valueCustomerEdit.Address2 || ''}
+                                        controlFunc={handleChangeEditCustomers}
+                                        placeholder="Address2"
+                                    />
+                                    {errors.Address2 && (
+                                        <p className="help error_text">{errors.Address2}</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-lg-6 col-md-6 col-sm-12">
+                                <div className="form-group dh-m">
+                                    <label>City</label>
+                                    <Inputfield
+                                        className="form-control"
+                                        name="City"
+                                        inputType="text"
+                                        content={valueCustomerEdit.City || ''}
+                                        controlFunc={handleChangeEditCustomers}
+                                        placeholder="City"
+                                    />
+                                    {errors.City && (
+                                        <p className="help error_text">{errors.City}</p>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="col-lg-6 col-md-6 col-sm-12">
+                                <div className="form-group dh-m">
+                                    <label>State</label>
+                                    <Inputfield
+                                        className="form-control"
+                                        name="State"
+                                        inputType="text"
+                                        content={valueCustomerEdit.State || ''}
+                                        controlFunc={handleChangeEditCustomers}
+                                        placeholder="State"
+                                    />
+                                    {errors.State && (
+                                        <p className="help error_text">{errors.State}</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-lg-6 col-md-6 col-sm-12">
+                                <div className="form-group dh-m">
+                                    <label>Postal Code</label>
+                                    <Inputfield
+                                        className="form-control"
+                                        name="PostalCode"
+                                        inputType="text"
+                                        content={valueCustomerEdit.PostalCode || ''}
+                                        controlFunc={handleChangeEditCustomers}
+                                        placeholder="PostalCode"
+                                    />
+                                    {errors.PostalCode && (
+                                        <p className="help error_text">{errors.PostalCode}</p>
+                                    )}
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </Appmodal>
+
+
 
 
         </section>);
